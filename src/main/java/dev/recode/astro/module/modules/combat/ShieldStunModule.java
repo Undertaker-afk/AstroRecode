@@ -4,7 +4,9 @@ import dev.recode.astro.api.utils.InventoryUtil;
 import dev.recode.astro.module.Category;
 import dev.recode.astro.module.Module;
 import dev.recode.astro.module.settings.RangeSliderSetting;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import dev.recode.astro.OrbitManager;
+import dev.recode.astro.api.event.events.ClientTickEvent;
+import dev.recode.astro.api.event.orbit.EventHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
@@ -40,17 +42,23 @@ public class ShieldStunModule extends Module {
         addSetting(hitDelay);
         addSetting(switchBackDelay);
 
-        ClientTickEvents.START_CLIENT_TICK.register(this::onTick);
     }
 
     @Override
     public void onEnable() {
+        OrbitManager.EVENT_BUS.subscribe(this);
         reset();
     }
 
     @Override
     public void onDisable() {
+        OrbitManager.EVENT_BUS.unsubscribe(this);
         reset();
+    }
+
+    @EventHandler
+    public void onClientTick(ClientTickEvent event) {
+        onTick(Minecraft.getInstance());
     }
 
     private void onTick(Minecraft client) {

@@ -1,12 +1,13 @@
 package dev.recode.astro;
 
+import dev.recode.astro.api.event.events.ClientTickEvent;
+import dev.recode.astro.api.event.orbit.EventHandler;
 import dev.recode.astro.module.KeybindMode;
 import dev.recode.astro.module.Module;
 import dev.recode.astro.module.ModuleManager;
 import dev.recode.astro.module.Setting;
 import dev.recode.astro.module.settings.KeybindSetting;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 
@@ -18,10 +19,12 @@ public class AstroRecodeClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         instance = this;
-        ClientTickEvents.END_CLIENT_TICK.register(this::tick);
+        OrbitManager.EVENT_BUS.subscribe(this);
     }
 
-    private void tick(Minecraft mc) {
+    @EventHandler
+    public void onClientTick(ClientTickEvent event) {
+        Minecraft mc = Minecraft.getInstance();
         if (mc == null || mc.getWindow() == null) return;
         long window = mc.getWindow().handle();
 

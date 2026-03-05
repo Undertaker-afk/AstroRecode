@@ -8,7 +8,7 @@ import dev.recode.astro.module.Module;
 import dev.recode.astro.module.settings.BooleanSetting;
 import dev.recode.astro.module.settings.RangeSliderSetting;
 import dev.recode.astro.api.config.FriendCFG;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import dev.recode.astro.api.event.events.ClientTickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -72,8 +72,6 @@ public class TriggerBotModule extends Module {
 
         instance = this;
 
-
-        ClientTickEvents.START_CLIENT_TICK.register(client -> onTick());
     }
 
     @Override
@@ -102,6 +100,12 @@ public class TriggerBotModule extends Module {
                 Minecraft.getInstance().player.swing(InteractionHand.MAIN_HAND);
             }
         }
+    }
+
+
+    @EventHandler
+    public void onClientTick(ClientTickEvent event) {
+        onTick();
     }
 
     @EventHandler
