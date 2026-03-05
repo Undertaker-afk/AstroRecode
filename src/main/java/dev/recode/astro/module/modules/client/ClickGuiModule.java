@@ -6,9 +6,6 @@ import dev.recode.astro.module.settings.ColorSetting;
 import dev.recode.astro.screens.ClickGUIScreen1;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import dev.recode.astro.OrbitManager;
-import dev.recode.astro.api.event.events.ClientTickEvent;
-import dev.recode.astro.api.event.orbit.EventHandler;
 import net.minecraft.client.Minecraft;
 
 @Environment(EnvType.CLIENT)
@@ -48,21 +45,13 @@ public class ClickGuiModule extends Module {
         }
 
         ClickGUIScreen1 guiScreen = new ClickGUIScreen1();
-
-        OrbitManager.EVENT_BUS.subscribe(this);
         Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreen(guiScreen));
     }
 
     @Override
     public void onDisable() {
-        OrbitManager.EVENT_BUS.unsubscribe(this);
-    }
-
-    @EventHandler
-    public void onClientTick(ClientTickEvent event) {
-        if (!isEnabled()) return;
-        if (!(Minecraft.getInstance().screen instanceof ClickGUIScreen1)) {
-            setEnabled(false);
+        if (Minecraft.getInstance().screen instanceof ClickGUIScreen1) {
+            Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreen(null));
         }
     }
 

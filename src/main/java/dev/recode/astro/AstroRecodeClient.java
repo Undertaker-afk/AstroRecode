@@ -1,5 +1,7 @@
 package dev.recode.astro;
 
+import dev.recode.astro.api.event.events.ClientTickEvent;
+import dev.recode.astro.api.event.orbit.EventHandler;
 import dev.recode.astro.module.KeybindMode;
 import dev.recode.astro.module.Module;
 import dev.recode.astro.module.ModuleManager;
@@ -17,9 +19,12 @@ public class AstroRecodeClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         instance = this;
+        OrbitManager.EVENT_BUS.subscribe(this);
     }
 
-    public void onClientTick(Minecraft mc) {
+    @EventHandler
+    public void onClientTick(ClientTickEvent event) {
+        Minecraft mc = Minecraft.getInstance();
         if (mc == null || mc.getWindow() == null) return;
         long window = mc.getWindow().handle();
 
