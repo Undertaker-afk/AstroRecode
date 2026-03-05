@@ -6,7 +6,9 @@ import dev.recode.astro.module.Category;
 import dev.recode.astro.module.Module;
 import dev.recode.astro.module.settings.RangeSliderSetting;
 import dev.recode.astro.module.settings.SliderSetting;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import dev.recode.astro.OrbitManager;
+import dev.recode.astro.api.event.events.ClientTickEvent;
+import dev.recode.astro.api.event.orbit.EventHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -50,12 +52,22 @@ public class AimAssistModule extends Module implements Globals {
         addSetting(maxDistance);
         addSetting(maxFov);
 
-        ClientTickEvents.START_CLIENT_TICK.register(this::onTick);
     }
 
     @Override
     public void onEnable() {
+        OrbitManager.EVENT_BUS.subscribe(this);
         randomize();
+    }
+
+    @Override
+    public void onDisable() {
+        OrbitManager.EVENT_BUS.unsubscribe(this);
+    }
+
+    @EventHandler
+    public void onTickEvent(ClientTickEvent event) {
+        onTick(Minecraft.getInstance());
     }
 
     private void onTick(Minecraft mc) {

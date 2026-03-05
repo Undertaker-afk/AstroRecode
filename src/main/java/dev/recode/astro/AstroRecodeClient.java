@@ -6,7 +6,6 @@ import dev.recode.astro.module.ModuleManager;
 import dev.recode.astro.module.Setting;
 import dev.recode.astro.module.settings.KeybindSetting;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 
@@ -18,10 +17,9 @@ public class AstroRecodeClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         instance = this;
-        ClientTickEvents.END_CLIENT_TICK.register(this::tick);
     }
 
-    private void tick(Minecraft mc) {
+    public void onClientTick(Minecraft mc) {
         if (mc == null || mc.getWindow() == null) return;
         long window = mc.getWindow().handle();
 
