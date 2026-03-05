@@ -18,7 +18,5 @@ public class AstroRecode implements ModInitializer {
         OrbitManager.initialize();
         ModuleRegistry.registerModules();
         ConfigCFG.loadLatestConfig();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(ConfigCFG::saveLatestConfig, "astro-config-save"));
     }
 }
